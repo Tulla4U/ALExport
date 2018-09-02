@@ -10,6 +10,7 @@ conversions = {
     "CURRENT":"Watching",
     "PLANNING":"Plan to Watch",
     "DROPPED": "Dropped",
+	"REPEATING": "Watching",
     "OVA": "OVA",
     "SPECIAL": "Special",
     "ONA": "ONA",
