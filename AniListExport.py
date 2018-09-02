@@ -110,6 +110,10 @@ responseJson = response.json()
 
 root = etree.Element("myanimelist")
 
+info = etree.SubElement(root, 'myinfo')
+
+etree.SubElement(info, 'user_export_type').text = '1'
+
 processedIds =[]
 
 file = codecs.open("anime_list.csv", "w", "utf-8")
@@ -125,18 +129,20 @@ for listType in responseJson['data']['anime']['lists']:
       etree.SubElement(anime, 'series_type').text = conversions[listentry['media']['format']]
       etree.SubElement(anime,'series_episodes').text = str(listentry['media']['episodes'])
       etree.SubElement(anime, 'my_watched_episodes').text = str(listentry['progress']) if listentry['repeat'] == 0 else str(listentry['media']['episodes'])
-      if listentry['startedAt']['year'] is not None:        
+      if listentry['startedAt']['year'] is not None:
           etree.SubElement(anime, 'my_start_date').text = str(listentry['startedAt']['year']) + '-' + str(listentry['startedAt']['month']) + '-' + str(listentry['startedAt']['day'])
       else:
-          etree.SubElement(anime, 'my_start_date').text = '0000-00-00'    
-      if listentry['completedAt']['year'] is not None:        
+          etree.SubElement(anime, 'my_start_date').text = '0000-00-00'
+      if listentry['completedAt']['year'] is not None:
           etree.SubElement(anime, 'my_finish_date').text = str(listentry['completedAt']['year']) + '-' + str(listentry['completedAt']['month']) + '-' + str(listentry['completedAt']['day'])
       else:
-          etree.SubElement(anime, 'my_finish_date').text = '0000-00-00'    
+          etree.SubElement(anime, 'my_finish_date').text = '0000-00-00'
       etree.SubElement(anime,'my_score').text = str(int(listentry['score']/10))
       etree.SubElement(anime, 'my_status').text = conversions[listentry['status']]
+      etree.SubElement(anime, 'my_comments').text = etree.CDATA('')
       etree.SubElement(anime,'my_times_watched').text = str(listentry['repeat'])
       etree.SubElement(anime, "my_rewatching_ep").text = str(listentry['progress']) if listentry['repeat'] !=0 else  str(0)
+      etree.SubElement(anime, "update_on_import").text = '1'
 
       file.write(listentry['media']['title']['romaji'])
       file.write(',')
@@ -157,6 +163,10 @@ fileObj.close()
 
 root = etree.Element("myanimelist")
 
+info = etree.SubElement(root, 'myinfo')
+
+etree.SubElement(info, 'user_export_type').text = '2'
+
 processedIds =[]
 
 file = codecs.open("manga_list.csv", "w", "utf-8")
@@ -173,17 +183,18 @@ for listType in responseJson['data']['manga']['lists']:
       etree.SubElement(anime,'manga_chapters').text = str(listentry['media']['chapters'])
       etree.SubElement(anime, 'my_read_volumes').text = str(listentry['progressVolumes']) if listentry['repeat'] == 0 else str(listentry['media']['volumes'])
       etree.SubElement(anime, 'my_read_chapters').text = str(listentry['progress']) if listentry['repeat'] == 0 else str(listentry['media']['chapters'])
-      if listentry['startedAt']['year'] is not None:        
+      if listentry['startedAt']['year'] is not None:
           etree.SubElement(anime, 'my_start_date').text = str(listentry['startedAt']['year']) + '-' + str(listentry['startedAt']['month']) + '-' + str(listentry['startedAt']['day'])
       else:
-          etree.SubElement(anime, 'my_start_date').text = '0000-00-00'    
-      if listentry['completedAt']['year'] is not None:        
+          etree.SubElement(anime, 'my_start_date').text = '0000-00-00'
+      if listentry['completedAt']['year'] is not None:
           etree.SubElement(anime, 'my_finish_date').text = str(listentry['completedAt']['year']) + '-' + str(listentry['completedAt']['month']) + '-' + str(listentry['completedAt']['day'])
       else:
-          etree.SubElement(anime, 'my_finish_date').text = '0000-00-00'    
+          etree.SubElement(anime, 'my_finish_date').text = '0000-00-00'
       etree.SubElement(anime,'my_score').text = str(int(listentry['score']/10))
       etree.SubElement(anime, 'my_status').text = conversions[listentry['status']]
       etree.SubElement(anime,'my_times_read').text = str(listentry['repeat'])
+      etree.SubElement(anime, "update_on_import").text = '1'
 
       file.write(listentry['media']['title']['romaji'])
       file.write(',')
