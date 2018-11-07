@@ -4,7 +4,19 @@ from lxml import etree
 import sys
 import codecs
 
-conversions = {
+mangaConversions = {
+    "PAUSED" : "On-Hold",
+    "COMPLETED":"Completed",
+    "CURRENT":"Reading",
+    "PLANNING":"Plan to Read",
+    "DROPPED": "Dropped",
+	"REPEATING": "Reading",
+    "MANGA":"MANGA",
+    "NOVEL":"NOVEL",
+    "ONE_SHOT":"ONE_SHOT"
+}
+
+animeConversions = {
     "PAUSED" : "On-Hold",
     "COMPLETED":"Completed",
     "CURRENT":"Watching",
@@ -22,6 +34,7 @@ conversions = {
     "ONE_SHOT":"ONE_SHOT",
     "MUSIC":"MUSIC"
 }
+
 Query = '''query ($userName: String) {
   manga: MediaListCollection(userName: $userName, type: MANGA) {
     lists {
@@ -126,7 +139,7 @@ for listType in responseJson['data']['anime']['lists']:
       etree.SubElement(anime, 'series_animedb_id').text =str(listentry['media']['idMal'])
       etree.SubElement(anime, 'series_anilist_id').text = str(listentry['media']['id'])
       etree.SubElement(anime,'series_title').text = etree.CDATA(listentry['media']['title']['romaji'])
-      etree.SubElement(anime, 'series_type').text = conversions[listentry['media']['format']]
+      etree.SubElement(anime, 'series_type').text = animeConversions[listentry['media']['format']]
       etree.SubElement(anime,'series_episodes').text = str(listentry['media']['episodes'])
       etree.SubElement(anime, 'my_watched_episodes').text = str(listentry['progress']) if listentry['repeat'] == 0 else str(listentry['media']['episodes'])
       if listentry['startedAt']['year'] is not None:
@@ -138,7 +151,7 @@ for listType in responseJson['data']['anime']['lists']:
       else:
           etree.SubElement(anime, 'my_finish_date').text = '0000-00-00'
       etree.SubElement(anime,'my_score').text = str(int(listentry['score']/10))
-      etree.SubElement(anime, 'my_status').text = conversions[listentry['status']]
+      etree.SubElement(anime, 'my_status').text = animeConversions[listentry['status']]
       etree.SubElement(anime, 'my_comments').text = etree.CDATA('')
       etree.SubElement(anime,'my_times_watched').text = str(listentry['repeat'])
       etree.SubElement(anime, "my_rewatching_ep").text = str(listentry['progress']) if listentry['repeat'] !=0 else  str(0)
@@ -150,7 +163,7 @@ for listType in responseJson['data']['anime']['lists']:
       file.write(',')
       file.write(str(listentry['progress']))
       file.write(',')
-      file.write(conversions[listentry['media']['format']])
+      file.write(animeConversions[listentry['media']['format']])
       file.write('\n')
 
 
@@ -192,7 +205,7 @@ for listType in responseJson['data']['manga']['lists']:
       else:
           etree.SubElement(anime, 'my_finish_date').text = '0000-00-00'
       etree.SubElement(anime,'my_score').text = str(int(listentry['score']/10))
-      etree.SubElement(anime, 'my_status').text = conversions[listentry['status']]
+      etree.SubElement(anime, 'my_status').text = mangaConversions[listentry['status']]
       etree.SubElement(anime,'my_times_read').text = str(listentry['repeat'])
       etree.SubElement(anime, "update_on_import").text = '1'
 
@@ -204,7 +217,7 @@ for listType in responseJson['data']['manga']['lists']:
       file.write(',')
       file.write(str(listentry['progressVolumes']))
       file.write(',')
-      file.write(conversions[listentry['media']['format']])
+      file.write(mangaConversions[listentry['media']['format']])
       file.write('\n')
 
 
