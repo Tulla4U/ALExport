@@ -66,6 +66,7 @@ Query = '''query ($userName: String) {
           format
           chapters
           volumes
+          siteUrl
         }
       }
     }
@@ -98,6 +99,7 @@ Query = '''query ($userName: String) {
           id
           format
           episodes
+          siteUrl
         }
       }
     }
@@ -127,13 +129,16 @@ info = etree.SubElement(root, 'myinfo')
 
 etree.SubElement(info, 'user_export_type').text = '1'
 
-processedIds =[]
+processedIds = []
+failedEntries =[]
 
 file = codecs.open("anime_list.csv", "w", "utf-8")
 file.write("Title,Score,Progress,Type\n'")
 for listType in responseJson['data']['anime']['lists']:
   for listentry in listType['entries']:
     if listentry['media']['id'] not in processedIds:
+      if listentry['media']['idMal'] is None:
+        failedEntries.append(listentry['media'])
       processedIds.append(listentry['media']['id'])
       anime = etree.SubElement(root,'anime')
       etree.SubElement(anime, 'series_animedb_id').text =str(listentry['media']['idMal'])
@@ -172,7 +177,11 @@ content = etree.tostring(root, pretty_print=True, xml_declaration = True, encodi
 fileObj.write(content)
 fileObj.close()
 
+print('Missing Anime:')
+for entry in failedEntries:
+  print(entry['title']['romaji'] +' ' +  entry['siteUrl'])
 
+failedEntries.clear()
 
 root = etree.Element("myanimelist")
 
@@ -187,6 +196,8 @@ file.write("Title,Score,ProgressChapter,ProgressVolumes,Type\n'")
 for listType in responseJson['data']['manga']['lists']:
   for listentry in listType['entries']:
     if listentry['media']['id'] not in processedIds:
+      if listentry['media']['idMal'] is None:
+        failedEntries.append(listentry['media'])
       processedIds.append(listentry['media']['id'])
       anime = etree.SubElement(root,'manga')
       etree.SubElement(anime, 'manga_mangadb_id').text =str(listentry['media']['idMal'])
@@ -225,3 +236,7 @@ fileObj = open('MangaList.xml', "wb")
 content = etree.tostring(root, pretty_print=True, xml_declaration = True, encoding="UTF-8")
 fileObj.write(content)
 fileObj.close()
+
+print('Missing Manga:')
+for entry in failedEntries:
+  print(entry['title']['romaji'] + ' ' + entry['siteUrl'])
