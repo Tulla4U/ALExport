@@ -10,10 +10,11 @@ mangaConversions = {
     "CURRENT":"Reading",
     "PLANNING":"Plan to Read",
     "DROPPED": "Dropped",
-	"REPEATING": "Reading",
+    "REPEATING": "Reading",
     "MANGA":"MANGA",
     "NOVEL":"NOVEL",
-    "ONE_SHOT":"ONE_SHOT"
+    "ONE_SHOT":"ONE_SHOT",
+    None:"Unknown"
 }
 
 animeConversions = {
@@ -22,7 +23,7 @@ animeConversions = {
     "CURRENT":"Watching",
     "PLANNING":"Plan to Watch",
     "DROPPED": "Dropped",
-	"REPEATING": "Watching",
+    "REPEATING": "Watching",
     "OVA": "OVA",
     "SPECIAL": "Special",
     "ONA": "ONA",
@@ -32,7 +33,8 @@ animeConversions = {
     "MANGA":"MANGA",
     "NOVEL":"NOVEL",
     "ONE_SHOT":"ONE_SHOT",
-    "MUSIC":"MUSIC"
+    "MUSIC":"MUSIC",
+    None:"Unknown"
 }
 
 Query = '''query ($userName: String) {
